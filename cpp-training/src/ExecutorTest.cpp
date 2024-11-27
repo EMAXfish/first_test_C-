@@ -1,28 +1,6 @@
-#include "hello.h"
-#include"iostream"
-using namespace std;
-enum  class heading {
-    N,//0
-    E,//1
-    S,//2
-    W//3
-};
-enum Inst {
-    M,
-    L,
-    R
-};
-class CAR
-{
-private:
-    int x, y;
-    int x_direction, y_diretion;
-    heading direction;
-    char ShowDirection;
+#include "Executor.h"
 
-public:
-    CAR(/* args */);
-    void ComputeCoordinate(Inst Change) {
+void Executor::ComputeCoordinate(Inst Change) {
         int dir = static_cast<int>(direction);
         if (Change == Inst::L) {
             dir = (dir - 1 + 4) % 4;
@@ -34,20 +12,20 @@ public:
 
         switch (direction) {
         case heading::N:
-            x_direction = 0;
-            y_diretion = 1;
+            xDirection = 0;
+            yDirection = 1;
             break;
         case heading::E:
-            x_direction = 1;
-            y_diretion = 0;
+            xDirection = 1;
+            yDirection = 0;
             break;
         case heading::S:
-            x_direction = 0;
-            y_diretion = -1;
+            xDirection = 0;
+            yDirection = -1;
             break;
         case heading::W:
-            x_direction = -1;
-            y_diretion = 0;
+            xDirection = -1;
+            yDirection = 0;
             break;
         }
         if (Change==Inst::M)
@@ -56,11 +34,11 @@ public:
         }
         
     }
-    void Move() {
-        x += x_direction;
-        y += y_diretion;
+void Executor::Move() {
+        x += xDirection;
+        y += yDirection;
     }
-    void CheckCoordinate() {
+void Executor::CheckCoordinate() {
         switch (direction) {
         case heading::N:
            ShowDirection='N';
@@ -77,27 +55,8 @@ public:
         }
         cout << "(" << x << "," << y <<","<<ShowDirection<< ")";
     }
-    void InitialBegin(int x,int y,heading cin_direction){
-        this->x=x;this->y=y;this->direction=cin_direction;
-    }
-};
-
-CAR::CAR()
-{
-    this->x = 0;this->y = 0;
-    this->x_direction = 0;this->y_diretion = 0;
-    this->direction = heading::N;
-}
-
-int test()
-{
-    CAR OneCar;
-    string commands;
-    int x,y;
-    char cin_direction;
+void Executor::InitialBegin(int x,int y,char cin_direction){
     heading InitialDirection;
-    cout<<"Enter initial position:(ps:(x,y,direction))"<<endl;
-    cin>>x>>y>>cin_direction;
     switch (cin_direction)
     {
     case 'N':
@@ -116,11 +75,10 @@ int test()
     exit(0);
         break;
     }
-    OneCar.InitialBegin(x,y,InitialDirection);
-    cout << "Enter commands : ";
-    cin >> commands;
-
-    for (char command : commands) {
+        this->x=x;this->y=y;this->direction=InitialDirection;
+}
+void Executor::GetCommands(string commands){
+        for (char command : commands) {
         Inst order;
         switch (command) {
         case 'M':
@@ -136,10 +94,22 @@ int test()
             cout << "Invalid command: " << endl;
             continue;
         }
-
-        OneCar.ComputeCoordinate(order);
+        ComputeCoordinate(order);
     }
-
+    }
+int test()
+{
+    Executor OneCar;
+    string commands;
+    int x,y;
+    char cin_direction;
+    cout<<"Enter initial position:(ps:(x,y,direction))"<<endl;
+    cin>>x>>y>>cin_direction;
+    OneCar.InitialBegin(x,y,cin_direction);
+    cout << "Enter commands : ";
+    cin >> commands;
+    OneCar.InitialBegin(x,y,cin_direction);
+    OneCar.GetCommands(commands);
     OneCar.CheckCoordinate();
     cout << endl;
     return 0;
