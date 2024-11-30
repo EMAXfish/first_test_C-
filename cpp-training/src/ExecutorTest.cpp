@@ -1,44 +1,5 @@
 #include"Executor.h"
 #include<memory>
-void Executor::ComputeCoordinate(Inst Change) {
-        if (this->FastMod==true&&Change!=F)
-        {
-            Move();
-        }
-        
-        int dir = static_cast<int>(direction);
-        if (Change == Inst::L) {
-            dir = (dir - 1 + 4) % 4;
-        }
-        else if (Change == Inst::R) {
-            dir = (dir + 1) % 4;
-        }
-        direction = static_cast<heading>(dir);
-
-        switch (direction) {
-        case heading::N:
-            xDirection = 0;
-            yDirection = 1;
-            break;
-        case heading::E:
-            xDirection = 1;
-            yDirection = 0;
-            break;
-        case heading::S:
-            xDirection = 0;
-            yDirection = -1;
-            break;
-        case heading::W:
-            xDirection = -1;
-            yDirection = 0;
-            break;
-        }
-        if (Change==Inst::M)
-        {
-            Move();
-        }
-        
-    }
 void Executor::Move() {
         x += xDirection;
         y += yDirection;
@@ -80,32 +41,13 @@ void Executor::InitialBegin(int x,int y,char cin_direction){
     exit(0);
         break;
     }
-        this->x=x;this->y=y;this->direction=InitialDirection;this->FastMod=false;
+    ChangeDirection();
+        this->x=x;this->y=y;this->direction=InitialDirection;
 }
-void Executor::GetCommands(string commands){
-        for (char command : commands) {
-        Inst order;
-        switch (command) {
-        case 'M':
-            order = Inst::M;
-            break;
-        case 'L':
-            order = Inst::L;
-            break;
-        case 'R':
-            order = Inst::R;
-            break;
-        case 'F':
-            this->FastMod=!FastMod;
-            order=F;
-            break;
-        default:
-            cout << "Invalid command: " << endl;
-            continue;
-        }
-        ComputeCoordinate(order);
-    }
-    }
+
+void Executor::FastModAct(){
+    FastMod=!FastMod;
+}
 
 void Executor::TurnLeft(){
     int dir = static_cast<int>(direction);
@@ -145,6 +87,11 @@ void Executor::ChangeDirection(){
 void ExecutorImpl::Execute(const std::string& commands) noexcept
 {
     for (const auto cmd : commands) {
+      if (cmd=='F')
+      {
+        
+      }
+      
       if (cmd =='M')
       {
         std::unique_ptr<MoveCommand>cmder=
@@ -168,22 +115,3 @@ void ExecutorImpl::Execute(const std::string& commands) noexcept
 }
 
    
-    
-int test()
-
-{
-    Executor OneCar;
-    string commands;
-    int x,y;
-    char cin_direction;
-    cout<<"Enter initial position:(ps:(x,y,direction))"<<endl;
-    cin>>x>>y>>cin_direction;
-    OneCar.InitialBegin(x,y,cin_direction);
-    cout << "Enter commands : ";
-    cin >> commands;
-    OneCar.InitialBegin(x,y,cin_direction);
-    OneCar.GetCommands(commands);
-    OneCar.CheckCoordinate();
-    cout << endl;
-    return 0;
-}
