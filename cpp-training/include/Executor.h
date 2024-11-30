@@ -10,7 +10,8 @@ enum  class heading {
 enum Inst {
     M,
     L,
-    R
+    R,
+    F
 };
 
 namespace adas {
@@ -32,9 +33,10 @@ private:
     int xDirection, yDirection;
     heading direction;
     char ShowDirection;
+    bool FastMod;
 
 public:
-    Executor():x(0), y(0), xDirection(0), yDirection(0), direction(heading::N) {}
+    Executor():x(0), y(0), xDirection(0), yDirection(0), direction(heading::N),FastMod(false) {}
     void ComputeCoordinate(Inst Change) ;
     void Move() ;
     void CheckCoordinate() ;
@@ -45,7 +47,41 @@ public:
     adas::Pose Query()const{
         return adas::Pose(this->x,this->y,this->direction);
     }
+    void TurnLeft();
+    void TurnRight();
+    void ChangeDirection();
     
+};
+
+class ExecutorImpl final : public Executor
+{
+private:
+void Execute(const std::string& commands) noexcept;
+class MoveCommand final
+    {
+    public:
+        void DoOperate(ExecutorImpl& executor) const noexcept
+        {
+            executor.Move();
+        }
+    };
+class TurnLeftCommand final
+{
+public:
+    void DoOperate(ExecutorImpl& executor) const noexcept
+    {
+        executor.TurnLeft();
+    }
+};
+class TurnRightCommand final
+{
+public:
+    void DoOperate(ExecutorImpl& executor) const noexcept
+    {
+        executor.TurnRight();
+    }
+};
+
 };
 
 int test(void);

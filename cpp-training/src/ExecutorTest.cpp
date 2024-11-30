@@ -1,6 +1,11 @@
-#include "Executor.h"
-
+#include"Executor.h"
+#include<memory>
 void Executor::ComputeCoordinate(Inst Change) {
+        if (this->FastMod==true&&Change!=F)
+        {
+            Move();
+        }
+        
         int dir = static_cast<int>(direction);
         if (Change == Inst::L) {
             dir = (dir - 1 + 4) % 4;
@@ -75,7 +80,7 @@ void Executor::InitialBegin(int x,int y,char cin_direction){
     exit(0);
         break;
     }
-        this->x=x;this->y=y;this->direction=InitialDirection;
+        this->x=x;this->y=y;this->direction=InitialDirection;this->FastMod=false;
 }
 void Executor::GetCommands(string commands){
         for (char command : commands) {
@@ -90,6 +95,10 @@ void Executor::GetCommands(string commands){
         case 'R':
             order = Inst::R;
             break;
+        case 'F':
+            this->FastMod=!FastMod;
+            order=F;
+            break;
         default:
             cout << "Invalid command: " << endl;
             continue;
@@ -97,7 +106,71 @@ void Executor::GetCommands(string commands){
         ComputeCoordinate(order);
     }
     }
+
+void Executor::TurnLeft(){
+    int dir = static_cast<int>(direction);
+    dir = (dir - 1 + 4) % 4;
+    direction = static_cast<heading>(dir);
+    ChangeDirection();
+}
+
+void Executor::TurnRight(){
+    int dir = static_cast<int>(direction);
+    dir = (dir +1) % 4;
+    direction = static_cast<heading>(dir);
+    ChangeDirection();
+}
+
+void Executor::ChangeDirection(){
+    switch (direction) {
+        case heading::N:
+            xDirection = 0;
+            yDirection = 1;
+            break;
+        case heading::E:
+            xDirection = 1;
+            yDirection = 0;
+            break;
+        case heading::S:
+            xDirection = 0;
+            yDirection = -1;
+            break;
+        case heading::W:
+            xDirection = -1;
+            yDirection = 0;
+            break;
+        }
+}
+
+void ExecutorImpl::Execute(const std::string& commands) noexcept
+{
+    for (const auto cmd : commands) {
+      if (cmd =='M')
+      {
+        std::unique_ptr<MoveCommand>cmder=
+        std::make_unique<MoveCommand>();
+        cmder->DoOperate(*this);
+      }
+      if (cmd=='L')
+      {
+        std::unique_ptr<TurnLeftCommand>cmder=
+        std::make_unique<TurnLeftCommand>();
+        cmder->DoOperate(*this);
+      }
+      if (cmd=='R')
+      {
+        std::unique_ptr<TurnRightCommand>cmder=
+        std::make_unique<TurnRightCommand>();
+        cmder->DoOperate(*this);
+      }
+      
+   }
+}
+
+   
+    
 int test()
+
 {
     Executor OneCar;
     string commands;
