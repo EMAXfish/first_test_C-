@@ -1,9 +1,5 @@
 #include"Executor.h"
 #include<memory>
-void Executor::Move() {
-        x += xDirection;
-        y += yDirection;
-    }
 void Executor::CheckCoordinate() {
         switch (direction) {
         case heading::N:
@@ -21,6 +17,7 @@ void Executor::CheckCoordinate() {
         }
         cout << "(" << x << "," << y <<","<<ShowDirection<< ")";
     }
+    
 void Executor::InitialBegin(int x,int y,char cin_direction){
     heading InitialDirection;
     switch (cin_direction)
@@ -49,7 +46,25 @@ void Executor::FastModAct(){
     FastMod=!FastMod;
 }
 
+void Executor::FastModMove(){
+   x+=xDirection;
+   y+=yDirection;
+}
+
+void Executor::Move() {
+        if (FastMod)
+        {
+            FastModMove();
+        }
+        x += xDirection;
+        y += yDirection;
+    }
+
 void Executor::TurnLeft(){
+    if (FastMod)
+    {
+            FastModMove();
+    }
     int dir = static_cast<int>(direction);
     dir = (dir - 1 + 4) % 4;
     direction = static_cast<heading>(dir);
@@ -57,6 +72,10 @@ void Executor::TurnLeft(){
 }
 
 void Executor::TurnRight(){
+    if (FastMod)
+    {
+            FastModMove();
+    }
     int dir = static_cast<int>(direction);
     dir = (dir +1) % 4;
     direction = static_cast<heading>(dir);
@@ -89,7 +108,9 @@ void ExecutorImpl::Execute(const std::string& commands) noexcept
     for (const auto cmd : commands) {
       if (cmd=='F')
       {
-        
+        std::unique_ptr<FastModeCommand>cmder=
+        std::make_unique<FastModeCommand>();
+        cmder->DoOperate(*this);
       }
       
       if (cmd =='M')

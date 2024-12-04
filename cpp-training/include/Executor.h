@@ -46,6 +46,7 @@ public:
         return adas::Pose(this->x,this->y,this->direction);
     }
     void FastModAct();
+    void FastModMove();
     void TurnLeft();
     void TurnRight();
     void ChangeDirection();
