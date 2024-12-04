@@ -53,48 +53,4 @@ public:
     
 };
 
-class ExecutorImpl final : public Executor
-{
-public:
-void Execute(const std::string& commands) noexcept;
-class MoveCommand final
-    {
-    public:
-        void DoOperate(ExecutorImpl& executor) const noexcept
-        {
-            executor.Move();
-        }
-    };
-class TurnLeftCommand final
-{
-public:
-    void DoOperate(ExecutorImpl& executor) const noexcept
-    {
-        executor.TurnLeft();
-    }
-};
-class TurnRightCommand final
-{
-public:
-    void DoOperate(ExecutorImpl& executor) const noexcept
-    {
-        if (executor.FastMod==true)
-        {
-            /* code */
-        }
-        
-        executor.TurnRight();
-    }
-};
-class FastModeCommand final
-{
-public:
-    void DoOperate(ExecutorImpl& executor) const noexcept
-    {
-        executor.FastModAct();
-    }
-};
-
-};
-
 int test(void);
