@@ -1,6 +1,7 @@
 #include"Executor.hpp"
 #include"ExecutorImpl.hpp"
 #include<memory>
+#include <unordered_map>
 #include"Command.hpp"
 void Executor::CheckCoordinate() {
         switch (direction) {
@@ -102,34 +103,21 @@ void Executor::ChangeDirection(){
 
 void ExecutorImpl::Execute(const std::string& commands) noexcept
 {
+    std::unordered_map<char,std::unique_ptr<adas::ICommand>>cmderMap;
+    cmderMap.emplace('M', std::make_unique<adas::MoveCommand>());
+    cmderMap.emplace('L', std::make_unique<adas::TurnLeftCommand>());
+    cmderMap.emplace('R', std::make_unique<adas::TurnRightCommand>());
+    cmderMap.emplace('F', std::make_unique<adas::FastModeCommand>());
+    cmderMap.emplace('B', std::make_unique<adas::BackModeCommand>());
+
     for (const auto cmd : commands) {
-       std::unique_ptr<adas::ICommand>cmder; 
-      if (cmd=='F')
-      {
-       cmder=std::make_unique<adas::FastModeCommand>();
-      }
-      
-      if (cmd =='M')
-      {
-        cmder=std::make_unique<adas::MoveCommand>();
-      }
-      if (cmd=='L')
-      {
-        cmder=std::make_unique<adas::TurnLeftCommand>();
-      }
-      if (cmd=='R')
-      {
-        cmder=std::make_unique<adas::TurnRightCommand>();
-      }
-      if (cmd=='B')
-      {
-        cmder=std::make_unique<adas::BackModeCommand>();
-      }
-      
-      if (cmder)
-      {
-        cmder->DoOperate(*this);
-      }
+       const auto it=cmderMap.find(cmd);
+
+       if (it!=cmderMap.end())
+       {
+        it->second->DoOperate(*this);
+       }
+       
       
       
    }
