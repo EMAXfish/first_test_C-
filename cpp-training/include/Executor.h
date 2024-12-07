@@ -1,17 +1,10 @@
 #pragma once
 #include"iostream"
-using namespace std;
 enum  class heading {
     N,//0
     E,//1
     S,//2
     W//3
-};
-enum Inst {
-    M,
-    L,
-    R,
-    F
 };
 
 namespace adas {
@@ -46,7 +39,6 @@ public:
         return adas::Pose(this->x,this->y,this->direction);
     }
     void FastModAct();
-    void FastModMove();
     void TurnLeft();
     void TurnRight();
     void ChangeDirection();

@@ -1,6 +1,7 @@
 #include"Executor.h"
 #include"ExecutorImpl.hpp"
 #include<memory>
+#include"Command.hpp"
 void Executor::CheckCoordinate() {
         switch (direction) {
         case heading::N:
@@ -16,7 +17,7 @@ void Executor::CheckCoordinate() {
             ShowDirection='W';
             break;
         }
-        cout << "(" << x << "," << y <<","<<ShowDirection<< ")";
+        std::cout << "(" << x << "," << y <<","<<ShowDirection<< ")";
     }
 
 void Executor::InitialBegin(int x,int y,char cin_direction){
@@ -35,7 +36,7 @@ void Executor::InitialBegin(int x,int y,char cin_direction){
     case 'S':
         InitialDirection=heading::S;
         break;
-    default:cout<<"Invalid initial"<<endl;
+    default:std::cout<<"Invalid initial"<<std::endl;
     exit(0);
         break;
     }
@@ -47,25 +48,12 @@ void Executor::FastModAct(){
     FastMod=!FastMod;
 }
 
-void Executor::FastModMove(){
-   x+=xDirection;
-   y+=yDirection;
-}
-
 void Executor::Move() {
-        if (FastMod)
-        {
-            FastModMove();
-        }
         x += xDirection;
         y += yDirection;
     }
 
 void Executor::TurnLeft(){
-    if (FastMod)
-    {
-            FastModMove();
-    }
     int dir = static_cast<int>(direction);
     dir = (dir - 1 + 4) % 4;
     direction = static_cast<heading>(dir);
@@ -73,10 +61,6 @@ void Executor::TurnLeft(){
 }
 
 void Executor::TurnRight(){
-    if (FastMod)
-    {
-            FastModMove();
-    }
     int dir = static_cast<int>(direction);
     dir = (dir +1) % 4;
     direction = static_cast<heading>(dir);
@@ -107,23 +91,23 @@ void Executor::ChangeDirection(){
 void ExecutorImpl::Execute(const std::string& commands) noexcept
 {
     for (const auto cmd : commands) {
-       std::unique_ptr<ICommand>cmder; 
+       std::unique_ptr<adas::ICommand>cmder; 
       if (cmd=='F')
       {
-       cmder=std::make_unique<FastModeCommand>();
+       cmder=std::make_unique<adas::FastModeCommand>();
       }
       
       if (cmd =='M')
       {
-        cmder=std::make_unique<MoveCommand>();
+        cmder=std::make_unique<adas::MoveCommand>();
       }
       if (cmd=='L')
       {
-        cmder=std::make_unique<TurnLeftCommand>();
+        cmder=std::make_unique<adas::TurnLeftCommand>();
       }
       if (cmd=='R')
       {
-        cmder=std::make_unique<TurnRightCommand>();
+        cmder=std::make_unique<adas::TurnRightCommand>();
       }
       if (cmder)
       {
