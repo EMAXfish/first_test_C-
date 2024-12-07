@@ -1,4 +1,4 @@
-#include"Executor.h"
+#include"Executor.hpp"
 #include"ExecutorImpl.hpp"
 #include<memory>
 #include"Command.hpp"
@@ -67,6 +67,12 @@ void Executor::TurnRight(){
     ChangeDirection();
 }
 
+void Executor::BackModAct(){
+    xDirection*=-1;
+    yDirection*=-1;
+    BackMod=!BackMod;
+}
+
 void Executor::ChangeDirection(){
     switch (direction) {
         case heading::N:
@@ -86,6 +92,12 @@ void Executor::ChangeDirection(){
             yDirection = 0;
             break;
         }
+    if (BackMod)
+    {
+        xDirection*=-1;
+        yDirection*=-1;
+    }
+    
 }
 
 void ExecutorImpl::Execute(const std::string& commands) noexcept
@@ -109,6 +121,11 @@ void ExecutorImpl::Execute(const std::string& commands) noexcept
       {
         cmder=std::make_unique<adas::TurnRightCommand>();
       }
+      if (cmd=='B')
+      {
+        cmder=std::make_unique<adas::BackModeCommand>();
+      }
+      
       if (cmder)
       {
         cmder->DoOperate(*this);
@@ -118,4 +135,4 @@ void ExecutorImpl::Execute(const std::string& commands) noexcept
    }
 }
 
-   
+

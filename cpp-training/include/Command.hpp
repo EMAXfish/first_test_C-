@@ -24,11 +24,19 @@ class TurnLeftCommand final:public ICommand
 public:
     void DoOperate(ExecutorImpl& executor) const noexcept override
     {
-        if (executor.FastMod==true)
+        if (executor.FastMod)
         {
             executor.Move();
         }
-        executor.TurnLeft();
+        if (executor.BackMod)
+        {
+            executor.TurnRight();
+        }
+        else 
+        {
+            executor.TurnLeft();
+        }
+        
     }
 };
 class TurnRightCommand final:public ICommand
@@ -36,12 +44,19 @@ class TurnRightCommand final:public ICommand
 public:
     void DoOperate(ExecutorImpl& executor) const noexcept override
     {
-        if (executor.FastMod==true)
+        if (executor.FastMod)
         {
             executor.Move();
         }
-        
+        if (executor.BackMod)
+        {
+            executor.TurnLeft();
+        }
+        else
+        {
         executor.TurnRight();
+        }
+        
     }
 };
 class FastModeCommand final:public ICommand
@@ -50,6 +65,13 @@ public:
     void DoOperate(ExecutorImpl& executor) const noexcept override
     {
         executor.FastModAct();
+    }
+};
+class BackModeCommand final:public ICommand
+{
+    void DoOperate(ExecutorImpl& executor) const noexcept override
+    {
+        executor.BackModAct();
     }
 };
 

@@ -28,8 +28,9 @@ private:
     char ShowDirection;
 
 public:
-    bool FastMod;
-    Executor():x(0), y(0), xDirection(0), yDirection(0), direction(heading::N),ShowDirection('N'),FastMod(false) {}
+    bool FastMod,BackMod;
+    Executor():x(0), y(0), xDirection(0), yDirection(0), direction(heading::N),ShowDirection('N'),
+    FastMod(false),BackMod(false) {}
     void Move() ;
     void CheckCoordinate() ;
     void InitialBegin(int x,int y,char cin_direction);
@@ -42,7 +43,7 @@ public:
     void TurnLeft();
     void TurnRight();
     void ChangeDirection();
-    
+    void BackModAct();
 };
 
 int test(void);
