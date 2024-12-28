@@ -6,12 +6,22 @@ namespace adas{
     public:
     virtual ~ICommand() = default;
     virtual void DoOperate(ExecutorImpl& executor) const noexcept = 0;
+    virtual void DoOperate911(Executor911& executor)const noexcept = 0;
   };
 class MoveCommand final:public ICommand
     {
     public:
         void DoOperate(ExecutorImpl& executor) const noexcept override
         {
+            if (executor.FastMod==true)
+        {
+            executor.Move();
+        }
+            executor.Move();
+        }
+        void DoOperate911(Executor911& executor) const noexcept override
+        {
+            executor.Move();
             if (executor.FastMod==true)
         {
             executor.Move();
@@ -36,8 +46,23 @@ public:
         {
             executor.TurnLeft();
         }
-        
     }
+    void DoOperate911(Executor911& executor) const noexcept override
+        {
+            if (executor.FastMod==true)
+        {
+            executor.Move();
+        }
+            if (executor.BackMod)
+        {
+            executor.TurnRight();
+        }
+        else 
+        {
+            executor.TurnLeft();
+        }
+            executor.Move();
+        }
 };
 class TurnRightCommand final:public ICommand
 {
@@ -58,11 +83,31 @@ public:
         }
         
     }
+    void DoOperate911(Executor911& executor) const noexcept override
+        {
+            if (executor.FastMod==true)
+        {
+            executor.Move();
+        }
+            if (executor.BackMod)
+        {
+            executor.TurnLeft();
+        }
+        else
+        {
+        executor.TurnRight();
+        }
+            executor.Move();
+        }
 };
 class FastModeCommand final:public ICommand
 {
 public:
     void DoOperate(ExecutorImpl& executor) const noexcept override
+    {
+        executor.FastModAct();
+    }
+    void DoOperate911(Executor911& executor) const noexcept override
     {
         executor.FastModAct();
     }
@@ -73,6 +118,11 @@ class BackModeCommand final:public ICommand
     {
         executor.BackModAct();
     }
+    void DoOperate911(Executor911& executor) const noexcept override
+    {
+        executor.BackModAct();
+    }
 };
+
 
 };

@@ -117,9 +117,27 @@ void ExecutorImpl::Execute(const std::string& commands) noexcept
        {
         it->second->DoOperate(*this);
        }
-       
-      
-      
+   
+   }
+}
+
+void Executor911::Execute(const std::string& commands) noexcept
+{
+    std::unordered_map<char,std::unique_ptr<adas::ICommand>>cmderMap;
+    cmderMap.emplace('M', std::make_unique<adas::MoveCommand>());
+    cmderMap.emplace('L', std::make_unique<adas::TurnLeftCommand>());
+    cmderMap.emplace('R', std::make_unique<adas::TurnRightCommand>());
+    cmderMap.emplace('F', std::make_unique<adas::FastModeCommand>());
+    cmderMap.emplace('B', std::make_unique<adas::BackModeCommand>());
+
+    for (const auto cmd : commands) {
+       const auto it=cmderMap.find(cmd);
+
+       if (it!=cmderMap.end())
+       {
+        it->second->DoOperate911(*this);
+       }
+   
    }
 }
 
