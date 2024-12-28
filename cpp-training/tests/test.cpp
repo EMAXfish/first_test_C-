@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include "Executor.hpp"
 #include"ExecutorImpl.hpp"
+//普通车测试
 /*TEST(ExecutorTest, test_case1)
 {
     std::unique_ptr<ExecutorImpl>executor(static_cast<ExecutorImpl*>(ExecutorImpl::NewExecutor()));
@@ -45,7 +46,8 @@ TEST(ExecutorTest, test_case4)
     ASSERT_EQ(target_4,result_4);
 }*/
 
-TEST(Executor911Test, test_case1)
+//911测试
+/*TEST(Executor911Test, test_case1)
 {
     std::unique_ptr<Executor911>executor(static_cast<Executor911*>(Executor911::NewExecutor()));
     executor->InitialBegin(0,0,'N');
@@ -80,4 +82,35 @@ TEST(Executor911Test, test_case4)
     adas::Pose target_4 {-4,-4,heading::E};
     adas::Pose result_4=executor->Query();
     ASSERT_EQ(target_4,result_4);
+}*/
+
+//Bus测试
+TEST(ExecutorBusTest, test_case1)
+{
+    std::unique_ptr<ExecutorBus>executor(static_cast<ExecutorBus*>(ExecutorBus::NewExecutor()));
+    executor->InitialBegin(0,0,'N');
+    executor->Execute("LM");
+    adas::Pose target_1 {-1,1,heading::W};
+    adas::Pose result_1=executor->Query();
+    ASSERT_EQ(target_1,result_1);
+}
+
+TEST(ExecutorBusTest, test_case2)
+{
+    std::unique_ptr<ExecutorBus>executor(static_cast<ExecutorBus*>(ExecutorBus::NewExecutor()));
+    executor->InitialBegin(0,0,'N');
+    executor->Execute("FLM");
+    adas::Pose target_2 {-2,2,heading::W};
+    adas::Pose result_2=executor->Query();
+    ASSERT_EQ(target_2,result_2);
+}
+
+TEST(ExecutorBusTest, test_case3)
+{
+    std::unique_ptr<ExecutorBus>executor(static_cast<ExecutorBus*>(ExecutorBus::NewExecutor()));
+    executor->InitialBegin(0,0,'N');
+    executor->Execute("FBMRM");
+    adas::Pose target_3 {2,-4,heading::W};
+    adas::Pose result_3=executor->Query();
+    ASSERT_EQ(target_3,result_3);
 }

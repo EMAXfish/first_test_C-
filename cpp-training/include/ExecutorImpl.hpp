@@ -15,6 +15,13 @@ public:
 void Execute(const std::string& commands)noexcept;
 };
 
+class ExecutorBus final : public Executor
+{
+public:
+
+void Execute(const std::string& commands)noexcept;
+};
+
 
 
 int test(void);
